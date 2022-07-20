@@ -25,3 +25,9 @@ public class Main {
         br.close();
     }
 }
+
+class MyPriorityQueue<Integer>{
+    int[] array;
+
+
+}
