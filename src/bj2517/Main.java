@@ -2,6 +2,7 @@ package bj2517;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Main {
 
@@ -15,12 +16,32 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
 
         runner = new int[N + 1];
-        tree = new int[4 * N];
-        for (int i = 1; i < N + 1; i++){
+        int[] sortRunner = new int[N + 1];
+
+
+        HashMap<Integer, Integer> runnerHash = new HashMap<>();
+        for (int i = 1; i < N + 1; i++) {
             // 실력 기록
             runner[i] = Integer.parseInt(br.readLine());
-            update(1, N, 1, runner[i], 1);
+            sortRunner[i] = runner[i];
         }
+
+        Arrays.sort(sortRunner);
+        //값 압축
+        for (int i = 1; i < N + 1; i++){
+            runnerHash.put(sortRunner[i], i);
+        }
+
+        tree = new int[4 * N];
+        for (int i = 1; i < N + 1; i++){
+            update(1, N, 1, runnerHash.get(runner[i]), 1);
+            int rank = i - query(1, N, 1, 1, runnerHash.get(runner[i]) - 1);
+            bw.write( rank + "\n");
+        }
+
+        bw.flush();
+        bw.close();
+        br.close();
 
     }
 
@@ -29,7 +50,12 @@ public class Main {
             return 0;
         }
         else if (queryLeft <= left && right <= queryRight){
-
+            return tree[node];
+        }
+        else{
+            int mid = (left + right) / 2;
+            return query(left, mid, 2 * node, queryLeft, queryRight)
+                    + query(mid + 1, right, (2 * node) + 1, queryLeft, queryRight);
         }
     }
 
