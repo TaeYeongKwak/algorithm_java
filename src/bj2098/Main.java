@@ -30,10 +30,9 @@ public class Main {
         }
 
         //모든 도시에 방문했을 경우의 비트마스크 크기
-        bitmaskSize = (1 << N);
+        bitmaskSize = (1 << N) - 1;
         //dp 배열 [방문한 도시를 표시한 비트마스크][도시 번호]
-        dp = new int[bitmaskSize][N + 1];
-
+        dp = new int[bitmaskSize + 1][N + 1];
         // 아직 방문하지 않은 곳은 -1로 처리
         for (int i = 0; i < bitmaskSize; i++) {
             Arrays.fill(dp[i], -1);
@@ -58,14 +57,13 @@ public class Main {
 
         for (int i = 1; i < N + 1; i++){
             // 다음에 갈 도시에 대한 비트마스킹
-            int next = 1 << i;
+            int next = 1 << (i - 1);
             // 현 도시에서 다음 도시로 갈 수 있는 경로가 존재하고, 아직 해당 도시로 가지 않았을 경우
             // (비트 마스킹으로 & 연산을 했을 때 해당 도시를 간적이 있다면 0보다 클 것임)
             if(graph[now][i] != 0 && (visit & next) == 0){
-                dp[visit][now] = Math.min(dp[visit][now], dfs(i, (visit|next)) + graph[now][i]);
+                dp[visit][now] = Math.min(dp[visit][now], dfs((visit | next), i) + graph[now][i]);
             }
         }
         return dp[visit][now];
-
     }
 }
