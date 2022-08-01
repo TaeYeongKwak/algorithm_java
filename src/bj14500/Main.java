@@ -65,6 +65,40 @@ public class Main {
             }
         }
         
+        // 가운데가 돌출된 모양 처리
+        if (r == 2){
+            int sum2 = map[point[0]][point[1]];
+            int cnt = 0;
+            for (int i = 0; i < 4; i++){
+                int nx = point[1] + dx[i];
+                int ny = point[0] + dy[i];
+                if (0 < nx && nx < M + 1 && 0 < ny && ny < N + 1){
+                    if (!visited[ny][nx]){
+                        sum2 += map[ny][nx];
+                        cnt++;
+                    }
+                }
+            }
+            // 옆에 있는 블록 3개가 다 더해졌을 경우
+            if (cnt == 3){
+                for (int i = 0; i < 4; i++){
+                    int nx = point[1] + dx[i];
+                    int ny = point[0] + dy[i];
+                    if (0 < nx && nx < M + 1 && 0 < ny && ny < N + 1){
+                        if (!visited[ny][nx]){
+                            sum2 -= map[ny][nx];
+                            sum = Math.max(sum, sum2);
+                            sum2 += map[ny][nx];
+                        }
+                    }
+                }
+            }
+            // 옆에 있는 블록 2개만 더해졌을 경우
+            else if (cnt == 2){
+                sum = Math.max(sum, sum2);
+            }
+        }
+        
         // 합한 값을 반환
         return sum;
     }
