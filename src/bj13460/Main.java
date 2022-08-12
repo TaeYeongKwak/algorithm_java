@@ -50,10 +50,17 @@ public class Main {
         while(!queue.isEmpty()){
             Node now = queue.poll();
 
-            if (now.red.x == end[0] && now.red.y == end[1]){
-                result = now.count;
+            if (visited[now.red.y][now.red.x][now.blue.y][now.blue.x]) continue;
+            visited[now.red.y][now.red.x][now.blue.y][now.blue.x] = true;
 
-                if (now.blue.x == end[0] && now.blue.y == end[1]){
+            if (now.blue.x == end[0] && now.blue.y == end[1]){
+                result = -1;
+                continue;
+            }
+
+            if (now.red.x == end[0] && now.red.y == end[1] && now.count <= 10){
+                result = now.count;
+                if (now.blue.x == end[0] && now.blue.y == end[1] || now.count > 10){
                     result = -1;
                     break;
                 }
@@ -114,8 +121,6 @@ public class Main {
             map[end[1]][end[0]] = 'O';
             queue.offer(new Node(red, blue, now.count + 1, 'B'));
 
-
-
         }
 
         System.out.println(result);
@@ -132,7 +137,6 @@ public class Main {
             if (map[bead.y][x] == 'R' || map[bead.y][x] == 'B' || map[bead.y][x] == '#'){
                 nx = x + 1;
                 map[bead.y][nx] = bead.color;
-                if (x == bead.x - 1)
                 break;
             }
         }
