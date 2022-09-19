@@ -35,7 +35,6 @@ public class Main {
             for (int c = 1; c < C + 1; c++){
                 if (mapLine[c - 1] == 'X'){
                     isIce[r][c] = true;
-                    ice.offer(new int[]{r, c});
                 }
                 else if (mapLine[c - 1] == 'L'){
                     swans.add(new int[]{r, c});
@@ -68,11 +67,13 @@ public class Main {
     }
 
     static void init(){
-        int[] swan1 = swans.get(0);
-        int[] swan2 = swans.get(1);
-
-        unionBfs(swan1);
-        unionBfs(swan2);
+        for (int r = 1; r < R + 1; r++){
+            for (int c = 1; c < C + 1; c++){
+                if(!visited[r][c] && !isIce[r][c]){
+                    unionBfs(new int[]{r, c});
+                }
+            }
+        }
     }
 
     static int[] dx = {-1, 0, 1, 0};
@@ -98,6 +99,10 @@ public class Main {
                         visited[ny][nx] = true;
                         queue.offer(new int[]{ny, nx});
                     }
+                    else if (isIce[ny][nx] && !visited[ny][nx]){
+                        visited[ny][nx] = true;
+                        ice.offer(new int[]{ny, nx});
+                    }
                 }
             }
         }
@@ -105,6 +110,10 @@ public class Main {
 
     static int meltIce(){
         int year = 0;
+        for (int i = 1; i < R + 1; i++){
+            Arrays.fill(visited[i], false);
+        }
+
         while (!ice.isEmpty()){
             int[] icePoint = ice.poll();
 
@@ -116,16 +125,17 @@ public class Main {
                 if (0 < nx && nx < C + 1 && 0 < ny && ny < R + 1){
                     if (!isIce[ny][nx]){
                         flag = true;
-                        break;
+                    }
+
+                    if (isIce[ny][nx] && !visited[ny][nx]){
+                        visited[ny][nx] = true;
+                        lazyIce.offer(new int[]{ny, nx});
                     }
                 }
             }
 
             if (flag){
                 water.offer(icePoint);
-            }
-            else{
-                lazyIce.offer(icePoint);
             }
 
             if (ice.isEmpty()){
