@@ -12,23 +12,36 @@ public class Main {
         int H = Integer.parseInt(st.nextToken());
         int W = Integer.parseInt(st.nextToken());
 
-        int result = 0;
-        int temp = 0;
-        int leftBlock = 0;
+        int[] field = new int[W];
         st = new StringTokenizer(br.readLine());
         for (int w = 0; w < W; w++){
-            int blockHeight = Integer.parseInt(st.nextToken());
-
-            if (blockHeight >= leftBlock){
-                leftBlock = blockHeight;
-                result += temp;
-                temp = 0;
-            }
-            else if (blockHeight < leftBlock){
-                temp += leftBlock - blockHeight;
-            }
-
-
+            field[w] = Integer.parseInt(st.nextToken());
         }
+
+        int sum = 0;
+        for (int w = 0; w < W; w++){
+            int middle = field[w];
+            int left = middle;
+            int right = middle;
+
+            for (int l = w - 1; l >= 0; l--){
+                if (field[l] > middle){
+                    left = Math.max(left, field[l]);
+                }
+            }
+
+            for (int r = w + 1; r < W; r++){
+                if (field[r] > middle){
+                    right = Math.max(right, field[r]);
+                }
+            }
+
+            int min = Math.min(left, right);
+            if (min > middle){
+                sum += min - middle;
+            }
+        }
+
+        System.out.println(sum);
     }
 }
