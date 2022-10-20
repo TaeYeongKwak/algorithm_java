@@ -9,6 +9,7 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         Stack<Character> stack = new Stack<>();
+        Stack<Character> rightStack = new Stack<>();
         int index = 0;
         while(true){
             char[] cArray = br.readLine().toCharArray();
@@ -18,6 +19,7 @@ public class Main {
 
             index++;
             stack.clear();
+            rightStack.clear();
 
             for (int i = 0; i < cArray.length; i++){
                 if (cArray[i] == '{'){
@@ -33,10 +35,26 @@ public class Main {
             }
 
             int cnt = 0;
-            char last;
             while(!stack.isEmpty()){
-                last = stack.pop();
-
+                char c = stack.pop();
+                if (c == '}'){
+                    if (rightStack.isEmpty()){
+                        rightStack.push('}');
+                    }
+                    else if (rightStack.peek() == '}'){
+                        cnt++;
+                        rightStack.pop();
+                    }
+                }
+                else if (c == '{'){
+                    if (rightStack.isEmpty()){
+                        cnt++;
+                        rightStack.push('}');
+                    }
+                    else if (rightStack.peek() == '}'){
+                        rightStack.pop();
+                    }
+                }
             }
 
             bw.write(index + ". " + cnt);
